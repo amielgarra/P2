@@ -15,12 +15,6 @@ public class SplashScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
-        /**ImageView imageView1 = (ImageView)findViewById(R.id.ViewLogo);
-        imageView1.setBackgroundResource(R.drawable.logoanimation);
-        anim = (AnimationDrawable) imageView1.getBackground();
-        anim.start();**/
-        //Intent intent = new Intent(SplashScreen.this,MainActivity.class );
-        //startActivity(intent);
 
         Thread timerThread = new Thread(){
             public void run(){

@@ -2,14 +2,21 @@ package com.example.chelsieanneee.autoredr_ound;
 
 import android.app.Activity;
 import android.os.Bundle;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import android.net.Uri;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.util.Base64OutputStream;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.os.IBinder;
 import android.content.ComponentName;
@@ -20,6 +27,7 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends Activity {
+    TextView textView;
 
     private ArrayList<Song> songList;
     private ListView songView;
@@ -51,6 +59,8 @@ public class MainActivity extends Activity {
         });
         SongAdapter songAdt = new SongAdapter(this, songList);
         songView.setAdapter(songAdt);
+
+        textView = (TextView)findViewById(R.id.textView);
 
          }
 
@@ -98,9 +108,43 @@ public class MainActivity extends Activity {
 
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
-        //musicSrv.playSong();
-        Toast.makeText(getBaseContext(),musicSrv.getUri(), Toast.LENGTH_SHORT).show();
-        //Toast.makeText(getBaseContext())
+        String x = musicSrv.getUri();
+        String res = "";
+        final File file = new File(x);
+
+        InputStream inputStream = null;
+        try{inputStream = new FileInputStream(file.getAbsolutePath());}catch (IOException a){Toast.makeText(getBaseContext(), a.toString(),Toast.LENGTH_SHORT).show();}
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        Base64OutputStream output64 = new Base64OutputStream(output, android.util.Base64.DEFAULT);
+        try {
+            while ((bytesRead = inputStream.read(buffer)) != -1 ) {
+                output64.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try{output64.close();}catch (IOException d){Toast.makeText(getBaseContext(),d.toString(),Toast.LENGTH_SHORT).show();}
+
+        res = output.toString();
+
+        textView.setText(res);
+
+        //Intent intent = new Intent(MainActivity.this, Process.class);
+        //intent.putExtra("Base64",res);
+        //startActivity(intent);
+
+
+
+
+        //Getting the extra
+        /**
+         Intent myIntent = getIntent(); // gets the previously created intent
+         String firstKeyName = myIntent.getStringExtra("firstKeyName"); // will return "FirstKeyValue"
+         **/
+
 
     }
     @Override

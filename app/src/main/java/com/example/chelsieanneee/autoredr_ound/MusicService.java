@@ -43,9 +43,9 @@ public class MusicService extends Service implements
     public String getUri(){
 
         Song playSong = songs.get(songPosn);
-//get id
-        long currSong = playSong.getID();
-//set uri
+    //get id
+    long currSong = playSong.getID();
+    //set uri
         Uri trackUri = ContentUris.withAppendedId(
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 currSong);
@@ -68,7 +68,6 @@ public class MusicService extends Service implements
         }
     }
 
-
     public void onCreate(){
         //create the service
         super.onCreate();
@@ -76,19 +75,8 @@ public class MusicService extends Service implements
         songPosn=0;
         //create player
         player = new MediaPlayer();
-
-        //initMusicPlayer();
     }
-    /**public void initMusicPlayer(){
-        //set player properties
-        player.setWakeMode(getApplicationContext(),
-                PowerManager.PARTIAL_WAKE_LOCK);
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        player.setOnPreparedListener(this);
-        player.setOnCompletionListener(this);
-        player.setOnErrorListener(this);
-    }**/
     public void setList(ArrayList<Song> theSongs){
         songs=theSongs;
     }
@@ -102,33 +90,7 @@ public class MusicService extends Service implements
         // TODO Auto-generated method stub
         return musicBind;
     }
-    /**@Override
-    public boolean onUnbind(Intent intent){
-        player.stop();
-        player.release();
-        return false;
-    }
-    public void playSong(){
-        //play a song
-        player.reset();
-        //get song
-        Song playSong = songs.get(songPosn);
-        //get id
-        long currSong = playSong.getID();
-        //set uri
-        Uri trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                currSong);
 
-        try{
-            player.setDataSource(getApplicationContext(), trackUri);
-        }
-        catch(Exception e){
-            Log.e("MUSIC SERVICE", "Error setting data source", e);
-
-            player.prepareAsync();
-        }
-    }**/
     @Override
     public void onPrepared(MediaPlayer mp) {
         //start playback
