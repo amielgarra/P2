@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
         songView.setAdapter(songAdt);
 
         textView = (TextView)findViewById(R.id.textView);
-
          }
 
     //connect to the service
@@ -109,6 +108,7 @@ public class MainActivity extends Activity {
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         String x = musicSrv.getUri();
+        //MP3 to Base64 Conversion
         String res = "";
         final File file = new File(x);
 
@@ -126,18 +126,16 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        finally {
+            res=output.toString();
+        }
         try{output64.close();}catch (IOException d){Toast.makeText(getBaseContext(),d.toString(),Toast.LENGTH_SHORT).show();}
-
-        res = output.toString();
-
+        //res = output.toString();
         textView.setText(res);
 
-        //Intent intent = new Intent(MainActivity.this, Process.class);
-        //intent.putExtra("Base64",res);
-        //startActivity(intent);
-
-
-
+        Intent intent = new Intent(MainActivity.this, Process.class);
+        intent.putExtra("Base64",textView.getText().toString());
+        startActivity(intent);
 
         //Getting the extra
         /**
@@ -145,8 +143,8 @@ public class MainActivity extends Activity {
          String firstKeyName = myIntent.getStringExtra("firstKeyName"); // will return "FirstKeyValue"
          **/
 
-
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //menu item selected

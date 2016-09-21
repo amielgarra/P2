@@ -33,6 +33,15 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".Process"
+
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="com.example.chelsieanneee.autoredr_ound.Process" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

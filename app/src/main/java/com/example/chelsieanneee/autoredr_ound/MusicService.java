@@ -16,7 +16,6 @@ import android.provider.MediaStore;
  * Created by chelsieanneee on 18 Aug 2016.
  */
 
-
 public class MusicService extends Service implements
     MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
     MediaPlayer.OnCompletionListener {

@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="500dp"
         android:layout_height="200dp"
-        android:id="@+id/tvbase"
+        android:id="@+id/tvBase"
         android:layout_weight="0.31"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

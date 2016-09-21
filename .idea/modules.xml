@@ -5,9 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/AutoReDr-ound.iml" filepath="$PROJECT_DIR$/AutoReDr-ound.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/base64/base64.iml" filepath="$PROJECT_DIR$/base64/base64.iml" />
-      <module fileurl="file://$PROJECT_DIR$/base64/base64.iml" filepath="$PROJECT_DIR$/base64/base64.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/libs/libs.iml" filepath="$PROJECT_DIR$/app/libs/libs.iml" />
-      <module fileurl="file://$PROJECT_DIR$/org-apache-ws-commons-util/org-apache-ws-commons-util.iml" filepath="$PROJECT_DIR$/org-apache-ws-commons-util/org-apache-ws-commons-util.iml" />
       <module fileurl="file://$PROJECT_DIR$/org-apache-ws-commons-util/org-apache-ws-commons-util.iml" filepath="$PROJECT_DIR$/org-apache-ws-commons-util/org-apache-ws-commons-util.iml" />
     </modules>
   </component>
