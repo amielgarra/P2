@@ -42,6 +42,7 @@ public class MusicService extends Service implements
     public String getUri(){
 
         Song playSong = songs.get(songPosn);
+
     //get id
     long currSong = playSong.getID();
     //set uri
@@ -52,6 +53,16 @@ public class MusicService extends Service implements
         return this.getRealPathFromURI(getBaseContext(),trackU);
     }
 
+    public String[] getSongInfo(){
+       String[] result = new String[2];
+
+        Song ps = songs.get(songPosn);
+
+        result[0] = ps.getTitle();
+        result[1] = ps.getArtist();
+
+        return result;
+    }
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {

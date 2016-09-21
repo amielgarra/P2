@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.view.MenuItem;
 
-
 public class MainActivity extends Activity {
     TextView textView;
 
@@ -108,6 +107,8 @@ public class MainActivity extends Activity {
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         String x = musicSrv.getUri();
+        String[] info = new String[2];
+        info = musicSrv.getSongInfo();
         //MP3 to Base64 Conversion
         String res = "";
         final File file = new File(x);
@@ -135,6 +136,7 @@ public class MainActivity extends Activity {
 
         Intent intent = new Intent(MainActivity.this, Process.class);
         intent.putExtra("Base64",textView.getText().toString());
+        intent.putExtra("Info", info);
         startActivity(intent);
 
         //Getting the extra

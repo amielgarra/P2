@@ -7,11 +7,20 @@
 
     <TextView
         android:layout_width="500dp"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:id="@+id/tvBase"
         android:layout_weight="0.31"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="51dp" />
+
+    <TextView
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        android:text="New Text"
+        android:id="@+id/tvSongTA"
+        android:layout_above="@+id/tvBase"
+        android:layout_alignLeft="@+id/tvBase"
+        android:layout_alignStart="@+id/tvBase" />
 
 </RelativeLayout>
