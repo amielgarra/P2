@@ -21,6 +21,7 @@
         android:id="@+id/tvSongTA"
         android:layout_above="@+id/tvBase"
         android:layout_alignLeft="@+id/tvBase"
-        android:layout_alignStart="@+id/tvBase" />
+        android:layout_alignStart="@+id/tvBase"
+        android:visibility="visible" />
 
 </RelativeLayout>

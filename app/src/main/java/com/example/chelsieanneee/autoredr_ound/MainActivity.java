@@ -2,22 +2,17 @@ package com.example.chelsieanneee.autoredr_ound;
 
 import android.app.Activity;
 import android.os.Bundle;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import android.net.Uri;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.util.Base64OutputStream;
+import android.provider.MediaStore;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.os.IBinder;
 import android.content.ComponentName;
 import android.content.Context;
@@ -84,7 +79,17 @@ public class MainActivity extends Activity {
     public void getSongList() {
         ContentResolver musicResolver = getContentResolver();
         Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
+        String[] projection = null;
+
+        String sortOrder = null;
+
+        String selectionMimeType = MediaStore.Files.FileColumns.MIME_TYPE + "=?";
+
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("mp3");
+
+        String[] selectionArgsMp3 = new String[]{ mimeType };
+
+        Cursor musicCursor = musicResolver.query(musicUri, projection, selectionMimeType, selectionArgsMp3, null);
         if(musicCursor!=null && musicCursor.moveToFirst()){
             //get columns
             int titleColumn = musicCursor.getColumnIndex
@@ -107,44 +112,13 @@ public class MainActivity extends Activity {
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         String x = musicSrv.getUri();
-        String[] info = new String[2];
-        info = musicSrv.getSongInfo();
-        //MP3 to Base64 Conversion
-        String res = "";
-        final File file = new File(x);
-
-        InputStream inputStream = null;
-        try{inputStream = new FileInputStream(file.getAbsolutePath());}catch (IOException a){Toast.makeText(getBaseContext(), a.toString(),Toast.LENGTH_SHORT).show();}
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-        Base64OutputStream output64 = new Base64OutputStream(output, android.util.Base64.DEFAULT);
-        try {
-            while ((bytesRead = inputStream.read(buffer)) != -1 ) {
-                output64.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            res=output.toString();
-        }
-        try{output64.close();}catch (IOException d){Toast.makeText(getBaseContext(),d.toString(),Toast.LENGTH_SHORT).show();}
-        //res = output.toString();
-        textView.setText(res);
+        String[] info = musicSrv.getSongInfo();
 
         Intent intent = new Intent(MainActivity.this, Process.class);
-        intent.putExtra("Base64",textView.getText().toString());
+
         intent.putExtra("Info", info);
+        intent.putExtra("Filepath", x);
         startActivity(intent);
-
-        //Getting the extra
-        /**
-         Intent myIntent = getIntent(); // gets the previously created intent
-         String firstKeyName = myIntent.getStringExtra("firstKeyName"); // will return "FirstKeyValue"
-         **/
-
     }
 
     @Override
