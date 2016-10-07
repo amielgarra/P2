@@ -1,12 +1,14 @@
 package com.example.chelsieanneee.autoredr_ound;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64OutputStream;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,18 +20,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by chelsieanneee on 15 Sep 2016.
  */
 public class Process extends AppCompatActivity {
-
+    boolean isProcessing = false;
     TextView textView;
     TextView textView1;
     VolleyConnection helper;
+    ProgressDialog progressDialog ;
+    String audioBase64;
     //// TODO: 10/6/2016 set url here. Current ip address is homer's laptop
-    final String API_URL = "192.168.1.18/autoredround/api/SoundProcess/ProcessAutoRedround";
+    final String API_URL = "http://192.168.8.99/autoredround/api/SoundProcess/ProcessAutoRedround";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,50 +45,32 @@ public class Process extends AppCompatActivity {
         Intent intent = getIntent();
         //textView.setText(intent.getStringExtra("Base64"));
         helper = VolleyConnection.getInstance(getBaseContext());
-
-        String filepath = intent.getStringExtra("Filepath");
         String[] songInfo = intent.getStringArrayExtra("Info");
-
-        String res = "";
-        final File file = new File(filepath);
-
-        InputStream inputStream = null;
-        try{inputStream = new FileInputStream(file.getAbsolutePath());}catch (IOException a){Toast.makeText(getBaseContext(), a.toString(),Toast.LENGTH_SHORT).show();}
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-        Base64OutputStream output64 = new Base64OutputStream(output, android.util.Base64.DEFAULT);
-        try {
-            while ((bytesRead = inputStream.read(buffer)) != -1 ) {
-                output64.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            res=output.toString();
-        }
-        try{output64.close();}catch (IOException d){Toast.makeText(getBaseContext(),d.toString(),Toast.LENGTH_SHORT).show();}
-        //res = output.toString();
-        textView.setText(res);
 
         String songTitle = songInfo[0];
         String songArtist = songInfo[1];
-        String songBase64 = textView.getText().toString(); //.getStringExtra("Base64");
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("SongTitle", songTitle);
-            obj.put("SongArtist", songArtist);
-            obj.put("Base64", songBase64);
+        textView.setText(audioBase64);
+        textView1.setText(songTitle + " " + songArtist);
+        if (isProcessing!=true) {
+            progressDialog = new ProgressDialog(this);
+            String filepath = intent.getStringExtra("Filepath");
 
-            textView.setText(obj.get("Base64").toString());
-            textView1.setText(obj.get("SongTitle").toString() + " " + obj.get("SongArtist").toString());
-        }catch (Exception e){
-            e.printStackTrace();
+            final File file = new File(filepath);
+            audioBase64 = convertToBase64(file);
+
+            String songBase64 = audioBase64.toString();
+
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("SongTitle", songTitle);
+                obj.put("SongArtist", songArtist);
+                obj.put("Base64", songBase64);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //Sends data to server
+            sendData(obj);
         }
-        //Sends data to server
-        sendData(obj);
         /**
          StringWriter out = new StringWriter();
          try{obj.writeJSONString(out);}catch (Exception e){}finally {
@@ -96,11 +81,16 @@ public class Process extends AppCompatActivity {
     }
 
     private void sendData(final JSONObject obj){
+        progressDialog.setMessage("Sending files to server...");
+        progressDialog.show();
+        isProcessing = true;
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, API_URL, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(org.json.JSONObject response) {
+                progressDialog.hide();
+                isProcessing = false;
                 try {
-                    JSONObject object = response.getJSONObject("Result");
+                    JSONObject object = response.getJSONObject("result");
                     Log.i("Response", "onResponse: " + object.toString());
                 }catch (Exception e){
                     e.printStackTrace();
@@ -110,6 +100,8 @@ public class Process extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.hide();
+                isProcessing=false;
                 Log.e("Response Error", "onErrorResponse: "+error.getMessage() );
             }
         }){
@@ -119,7 +111,28 @@ public class Process extends AppCompatActivity {
                 return obj.toString().getBytes();
             }
         };
+        request.setRetryPolicy(new DefaultRetryPolicy(100000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         helper.addToRequestQueue(request,"Send Audio");
+    }
+
+    private String convertToBase64(File file){
+        try{
+            byte[] audioByte;
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            FileInputStream inputStream = new FileInputStream(file.getAbsolutePath());
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while (-1!=(bytesRead = inputStream.read(buffer))){
+                output.write(buffer,0,bytesRead);
+            }
+            audioByte= output.toByteArray();
+            return Base64.encodeToString(audioByte,Base64.DEFAULT);
+        }catch (IOException a){
+            Toast.makeText(getBaseContext(), a.toString(),Toast.LENGTH_SHORT).show();
+            return  null;
+        }
     }
 
 }
