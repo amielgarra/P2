@@ -21,9 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-/**
- * Created by chelsieanneee on 15 Sep 2016.
- */
 public class Process extends AppCompatActivity {
     boolean isProcessing = false;
     TextView textView;
@@ -88,10 +85,14 @@ public class Process extends AppCompatActivity {
             @Override
             public void onResponse(org.json.JSONObject response) {
                 progressDialog.hide();
+                Log.i("Response", "onResponse: " + response.toString());
                 isProcessing = false;
                 try {
-                    JSONObject object = response.getJSONObject("result");
-                    Log.i("Response", "onResponse: " + object.toString());
+                    if (response.get("result")!=null&&response.getString("result")=="Success") {
+                        String outputName = response.getString("data");
+                        //Use this to access pdf file in server. send to intent to open in browser
+                        String OutputURL = "http://192.168.8.99/autoredround/output/" + outputName;
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("Response", "onResponse: "+e.getMessage());

@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * Created by chelsieanneee on 2 Aug 2016.
- */
+
 
     public class SongAdapter extends BaseAdapter {
 

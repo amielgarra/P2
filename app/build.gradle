@@ -10,6 +10,11 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        jackOptions{
+            enabled true
+        }
+
     }
     buildTypes {
         release {
@@ -17,6 +22,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions{
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
@@ -28,5 +39,6 @@ dependencies {
     compile files('libs/android-gif-drawable-1.2.2-javadoc.jar')
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.2'
     compile 'com.mcxiaoke.volley:library:1.0.19'
-
+    compile files('libs/android-core.jar')
+    compile files('libs/dasar.jar')
 }

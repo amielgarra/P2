@@ -115,9 +115,9 @@ public class MainActivity extends Activity {
         String x = musicSrv.getUri();
         String[] info = musicSrv.getSongInfo();
 
-        Intent intent = new Intent(MainActivity.this, Process.class);
+        Intent intent = new Intent(MainActivity.this, Processing.class);
 
-        intent.putExtra("Info", info);
+//        intent.putExtra("Info", info);
         intent.putExtra("Filepath", x);
         startActivity(intent);
     }
